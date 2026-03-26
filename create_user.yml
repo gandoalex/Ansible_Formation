@@ -1,0 +1,19 @@
+---
+
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Create group dev
+      ansible.builtin.group:
+        name: dev
+        state: present
+
+    - name: Create a user account
+      ansible.builtin.user:
+        name: dana
+        groups: dev
+        shell: /bin/bash
+        comment: The best one
+        state: present

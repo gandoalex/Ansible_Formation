@@ -1,0 +1,32 @@
+---
+
+- name: Install and start httpd on different servers
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Install Apache on Debian/Ubuntu
+      apt:
+        name: apache2
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install httpd on AlmaLinux
+      dnf:
+        name: httpd
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Start Apache2 using command
+      command: apache2ctl start
+      args:
+        creates: /var/run/apache2/apache2.pid
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Start httpd using command
+      command: httpd
+      args:
+        creates: /run/httpd/httpd.pid
+      when: ansible_facts['os_family'] == "RedHat"
+
